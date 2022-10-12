@@ -13,6 +13,12 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
     [TestFixture]
     public class LogAnalyzerTests
     {
+        [TearDown]
+        public void AfterEachTest()
+        {
+            ExtensionManagerFactory.SetManager(null);
+        }
+
         [Test]
         public void IsValidFileName_ExtManagerThrowsException_ReturnsFalse()
         {
@@ -23,7 +29,7 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
                 FakeExtensionManager fakeManager = new FakeExtensionManager();
                 fakeManager.willThrow = new Exception("UNIT-TEST");
                 ExtensionManagerFactory.SetManager(fakeManager);
-                LogAnalyzer log = new();
+                LogAnalyzer log = new LogAnalyzer();
                 result = log.IsValidLogFileName("WhatADay.ext");
                 result = true;
                 
@@ -45,7 +51,8 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
             FakeExtensionManager fakeManager = new FakeExtensionManager();
             fakeManager.WillBeValid = true;
             ExtensionManagerFactory.SetManager(fakeManager);
-            LogAnalyzer log = new();
+
+            LogAnalyzer log = new LogAnalyzer();
 
             bool result = log.IsValidLogFileName("short.ext");
 
@@ -58,7 +65,7 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
         {
             FakeExtensionManager fakeManager = new FakeExtensionManager();
             ExtensionManagerFactory.SetManager(fakeManager);
-            LogAnalyzer log = new();
+            LogAnalyzer log = new LogAnalyzer();
 
             bool result = log.IsValidLogFileName("short.ext");
 

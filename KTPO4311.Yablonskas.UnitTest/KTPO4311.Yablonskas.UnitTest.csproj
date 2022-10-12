@@ -7,12 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\LogAn\LogAnalyzerTestsReserved.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CnTP\CnTP.csproj" />
     <ProjectReference Include="..\KTPO4311.Yablonskas.Lib\KTPO4311.Yablonskas.Lib.csproj" />
   </ItemGroup>
 

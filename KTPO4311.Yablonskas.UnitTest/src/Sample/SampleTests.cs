@@ -12,7 +12,5 @@ namespace KTPO4311.Yablonskas.UnitTest.src.Sample
 
         }
 
-
-
     }
 }
