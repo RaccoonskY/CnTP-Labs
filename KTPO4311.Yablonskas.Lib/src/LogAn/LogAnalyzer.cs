@@ -9,9 +9,12 @@ namespace KTPO4311.Yablonskas.Lib.src.LogAn
     public class LogAnalyzer
     {   
         public IExtensionManager mrg ;
+        public IWebService srv;
+        public IEmailService email;
         public LogAnalyzer()
         {
             mrg = ExtensionManagerFactory.Create();
+            srv = WebServiceFactory.Create();
         }
         //Анализатор лог. файлов
         public bool IsValidLogFileName(string filename)
@@ -19,7 +22,26 @@ namespace KTPO4311.Yablonskas.Lib.src.LogAn
             return mrg.IsValid(filename);
         }
 
+        public void Analyze(string filename)
+        {
+            if(filename.Length < 8)
+            {
+                try 
+                {
+                    //передать внешней службе сообщение об ошибке
+                    srv = WebServiceFactory.Create();
+                    srv.LogError("Filename is too short: " + filename);
+                }
+                catch (Exception e)
+                {
+                    //отправить сообщение по эл. почте
+                    email = EmailServiceFactory.Create();
+                    email.SendEmail("somewhere@mail.com", "Unable to call webservice", e.Message);
+                    
 
+                }
+            }
+        }
 
         //LAB#1
         //public bool WasLastFileNameValid { get; set; }

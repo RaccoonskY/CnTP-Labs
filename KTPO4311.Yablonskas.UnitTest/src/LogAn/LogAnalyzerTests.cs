@@ -13,6 +13,17 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
     [TestFixture]
     public class LogAnalyzerTests
     {
+
+
+        [TearDown]
+        public void AfterEachTest()
+        {
+            ExtensionManagerFactory.SetManager(null);
+            WebServiceFactory.SetService(null);
+            EmailServiceFactory.SetService(null);
+
+        }
+
         [Test]
         public void IsValidFileName_ExtManagerThrowsException_ReturnsFalse()
         {
@@ -26,7 +37,6 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
                 LogAnalyzer log = new();
                 result = log.IsValidLogFileName("WhatADay.ext");
                 result = true;
-                
                
             }
             catch (Exception)
@@ -66,6 +76,43 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
 
         }
 
+
+        [Test]
+        public void Analyze_TooShortFileName_CallsWebService()
+        {
+            FakeWebService mockWebService = new FakeWebService();
+            WebServiceFactory.SetService(mockWebService);
+
+            LogAnalyzer log = new LogAnalyzer();
+            string tooShortFilename = "abc.ext";
+
+            log.Analyze(tooShortFilename);
+
+            StringAssert.Contains("Filename is too short: abc.ext", mockWebService.LastError);
+
+        }
+
+        [Test]
+        public void Analyze_WebServiceThrows_SendsEmail()
+        {
+            FakeWebService stubWebService = new FakeWebService();
+            WebServiceFactory.SetService(stubWebService);
+            stubWebService.willThrow = new Exception("it's imitation");
+
+            FakeEmailService mockEmail = new FakeEmailService();
+            EmailServiceFactory.SetService(mockEmail);
+
+            LogAnalyzer log = new LogAnalyzer();
+            string tooShortFilename = "abc.ext";
+
+            log.Analyze(tooShortFilename);
+
+            StringAssert.Contains("somewhere@mail.com", mockEmail.To);
+            StringAssert.Contains("Unable to call webservice", mockEmail.Subject);
+            StringAssert.Contains("it's imitation", mockEmail.Body);
+
+        }
+
     }
 
     internal class FakeExtensionManager : IExtensionManager
@@ -84,7 +131,33 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
         }
     }
 
-   
+    internal class FakeWebService : IWebService
+    {
+        public string LastError;
+        public Exception willThrow = null;
+        public void LogError(string message)
+        {
+            if(willThrow != null)
+            {
+                throw willThrow;
+            }
+            LastError = message;
+        }
+    }
+
+    internal class FakeEmailService : IEmailService
+    {
+        public string Subject;
+        public string To;
+        public string Body;
+
+        public void SendEmail(string to, string subject, string body)
+        {
+            To = to; Subject = subject; Body = body;
+        }
+    }
+
+
 
 
 
