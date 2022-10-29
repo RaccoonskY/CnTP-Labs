@@ -19,6 +19,7 @@ namespace KTPO4311.Yablonskas.Lib.src.LogAn
         //Анализатор лог. файлов
         public bool IsValidLogFileName(string filename)
         {
+           
             return mrg.IsValid(filename);
         }
 

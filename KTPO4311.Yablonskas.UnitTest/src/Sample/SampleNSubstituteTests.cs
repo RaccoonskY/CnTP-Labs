@@ -30,7 +30,7 @@ namespace KTPO4311.Yablonskas.UnitTest.src.Sample
         [Test]
         public void Returns_ArgAny_Works()
         {
-            //создание поддельного объекта
+            //создание поддельного объекта 
             IExtensionManager fakeExtensionManager = Substitute.For<IExtensionManager>();
             //Настроить объект, чтобы метод возвращал true для заданного значения входного параметра
             fakeExtensionManager.IsValid(Arg.Any<string>()).Returns(true);
