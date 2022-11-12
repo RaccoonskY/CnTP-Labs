@@ -113,6 +113,23 @@ namespace KTPO4311.Yablonskas.UnitTest.src.LogAn
 
         }
 
+        [Test]
+        public void Analyze_WhenAnalyzed_FiredEvent()
+        {
+            bool analyzedFired = false;
+
+            LogAnalyzer logAnalyzer = new LogAnalyzer();
+
+            logAnalyzer.Analyzed += delegate ()
+            {
+                analyzedFired = true;
+            };
+
+            logAnalyzer.Analyze("validfilename.vld");
+
+            Assert.IsTrue(analyzedFired);
+        }
+
     }
 
     internal class FakeExtensionManager : IExtensionManager

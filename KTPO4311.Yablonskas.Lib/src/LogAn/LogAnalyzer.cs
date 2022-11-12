@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace KTPO4311.Yablonskas.Lib.src.LogAn
 {
-    public class LogAnalyzer
-    {   
-        public IExtensionManager mrg ;
+    public class LogAnalyzer : ILogAnalyzer
+    {
+        public event LogAnalyzerAction Analyzed = null;
+
+        public IExtensionManager mrg;
         public IWebService srv;
         public IEmailService email;
         public LogAnalyzer()
@@ -19,15 +21,15 @@ namespace KTPO4311.Yablonskas.Lib.src.LogAn
         //Анализатор лог. файлов
         public bool IsValidLogFileName(string filename)
         {
-           
+
             return mrg.IsValid(filename);
         }
 
         public void Analyze(string filename)
         {
-            if(filename.Length < 8)
+            if (filename.Length < 8)
             {
-                try 
+                try
                 {
                     //передать внешней службе сообщение об ошибке
                     srv = WebServiceFactory.Create();
@@ -38,12 +40,21 @@ namespace KTPO4311.Yablonskas.Lib.src.LogAn
                     //отправить сообщение по эл. почте
                     email = EmailServiceFactory.Create();
                     email.SendEmail("somewhere@mail.com", "Unable to call webservice", e.Message);
-                    
+
 
                 }
             }
+
+           // RaiseAnalyzedEvent();
         }
 
+        protected void RaiseAnalyzedEvent()
+        {
+            if (Analyzed != null)
+            {
+                Analyzed();
+            }
+        }
         //LAB#1
         //public bool WasLastFileNameValid { get; set; }
 
