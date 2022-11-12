@@ -45,7 +45,7 @@ namespace KTPO4311.Yablonskas.Lib.src.LogAn
                 }
             }
 
-           // RaiseAnalyzedEvent();
+            RaiseAnalyzedEvent();
         }
 
         protected void RaiseAnalyzedEvent()
