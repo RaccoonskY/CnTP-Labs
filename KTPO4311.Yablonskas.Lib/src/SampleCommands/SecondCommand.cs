@@ -19,7 +19,6 @@ namespace KTPO4311.Yablonskas.Lib.src.SampleCommands
 
         public void Execute()
         {
-            throw new Exception("Decorator must catch this! (┬┬_┬┬)");
             iExecute++;
             view.Render(this.GetType().ToString() + "\n iExecute = " + iExecute);
         }
